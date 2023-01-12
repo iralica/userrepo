@@ -54,7 +54,11 @@ public class RepositoryIntegrationTest {
                         hasProperty("name", is("rob"))
                 )
         );
-
+        assertThat(repository.findAll(), containsInAnyOrder(
+                        hasProperty("email", is("bob@google.com")),
+                        hasProperty("email", is("rob@google.com"))
+                )
+        );
     }
 }
 
