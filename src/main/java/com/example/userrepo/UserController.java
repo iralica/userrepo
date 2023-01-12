@@ -1,5 +1,6 @@
 package com.example.userrepo;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+//@SpringBootTest - стартует спринг приложение целиком
+//@SpringBootTest
+//@AutoConfigureMockMvc - стартует спринг приложение но не стартует веб-сервер
+//@WebMvcTest - стартует только веб-сервер и нужна для тестирования бизнес-логики в контроллерах
+//@DataJpaTest - стартует только часть проекта по работе с базой данных
 
 @RestController
     public class UserController {
