@@ -25,7 +25,7 @@ import java.util.Map;
 
         @PostMapping("/users")
         ResponseEntity<String> addUser(
-                @RequestBody User user
+               @Valid @RequestBody User user
         )
         {
             repository.save(user);
