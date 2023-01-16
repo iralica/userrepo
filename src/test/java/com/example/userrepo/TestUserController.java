@@ -5,9 +5,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)// для запуска тестов под JUNIT4
@@ -21,6 +23,12 @@ public class TestUserController {
     @Autowired
     UserController userController;
 
+    @MockBean  // нужно заменить реализацию UserRepository на заглушку
+            // создает фэйковый репоситори чтобы тест работал
+            // это нужно чтобы можно было тестировать метода контроллера не создавая в памяти часть
+            // отвечающую за базу данных
+    UserRepository repository;
+
     @Test
     public void normalUserCreation() throws Exception {
         mockMvc.perform(
@@ -29,7 +37,9 @@ public class TestUserController {
                                 .contentType("application/json")
 
                 )
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string("User is valid"))
+                 ;
     }
 
     @Test
