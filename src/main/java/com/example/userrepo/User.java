@@ -22,5 +22,8 @@ public class User {
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
     private String email;
+
+    public User(long l, String rob, String s) {
+    }
 }
 

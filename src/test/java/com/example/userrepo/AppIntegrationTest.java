@@ -1,16 +1,20 @@
 package com.example.userrepo;
-
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)// для запуска тестов под JUNIT4
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,19 +39,47 @@ public class AppIntegrationTest {
                 headers
         );
 
+        String body =
+                restTemplate.postForEntity(
+                        "http://localhost:" + port + "/users",
+                        request,
+                        String.class
+                ).getBody();
 
+        assertEquals(body, "User is valid");
+    }
+    // http://localhost:8080/upper?text=hello
+    @Test
+    public void testToUpperCase() throws Exception {
+        ResponseEntity<String> response =
+                restTemplate.getForEntity(
+                        "http://localhost:" + port + "/upper?text=hello",
+                        String.class
+                );
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertTrue(response.hasBody());
 
-        restTemplate.postForEntity(
-                "http://localhost:"+port+"/users",
-                      request,
-                      String.class
+        JSONAssert.assertEquals(response.getBody(), "{\"result\":\"HELLO\"}", true);
 
-        ).getBody();
+        JSONObject body = new JSONObject(response.getBody());
 
-
-        //assertEquals(body, "User is valid");
+        assertTrue(body.has("result"));
+        assertEquals(body.get("result"), "HELLO");
 
     }
 
+    @Test
+    public void testToUpperCaseWithEmpty() throws Exception {
+        ResponseEntity<String> response =
+                restTemplate.getForEntity(
+                        "http://localhost:" + port + "/upper?text=",
+                        String.class
+                );
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertTrue(response.hasBody());
+
+        JSONAssert.assertEquals(response.getBody(), "{\"result\":\"\"}", true);
+    }
 
 }

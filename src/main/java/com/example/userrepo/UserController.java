@@ -56,6 +56,30 @@ import java.util.Map;
         return errors;
     }
 
+    // htpp://localhost:users/1 -> "bob:bob@gmail.com"
+    @GetMapping("/users/{key}")
+    ResponseEntity<String> nameEmailCombo(
+            @PathVariable (name = "key") Long key
+    )
+    {
+        return ResponseEntity.ok(
+                repository.findById(key).map(u -> u.getName()+":"+u.getEmail()).orElse("")
+        );
+    }
+
+    // 1. напишите функцию обрабатывающую запрос
+    // GET http://localhost:8080/upper?text=hello -> {"result": "HELLO"}
+    // 2. напишите тест который это проверит
+    @GetMapping("/upper")
+    public ResponseEntity<Map<String, String>> toUpperCase(
+            @RequestParam /*(name = "text")*/ String text
+    )
+    {
+        Map<String, String> result = new HashMap<>();
+        result.put("result", text != null ? text.toUpperCase() : "");
+        return ResponseEntity.ok(result);
+    }
+
 
 
 
